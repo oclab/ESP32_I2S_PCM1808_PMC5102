@@ -60,9 +60,8 @@ static void pcm1808_read_task(void* args)
     size_t bytes_read = adc.read(buffer, AUDIO_BUFF_SIZE, 1000);
     
     if (bytes_read > 0) {
-      // Convert first sample to 32-bit signed integer and print
-      // PCM1808 outputs 24-bit data in 32-bit frames
-      int32_t sample = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
+      // Use helper method to extract first sample
+      int32_t sample = PCM1808::extractSample(buffer, 0);
       Serial.printf("Sample: %d, Bytes read: %d\n", sample, bytes_read);
     }
     

@@ -20,6 +20,13 @@ public:
     // Returns number of bytes read, 0 on failure
     size_t read(uint8_t* buffer, size_t bufferSize, uint32_t timeout_ms = 1000);
     
+    // Extract 32-bit sample from buffer at given offset
+    // PCM1808 outputs 24-bit data in 32-bit frames
+    static int32_t extractSample(const uint8_t* buffer, size_t offset = 0);
+    
+    // Extract left and right samples from stereo buffer
+    static void extractStereoSamples(const uint8_t* buffer, int32_t& left, int32_t& right);
+    
     // Enable/disable the I2S channel
     bool enable();
     bool disable();

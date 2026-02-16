@@ -79,13 +79,19 @@ void loop() {
 ### Sample Value Extraction
 
 ```cpp
-// Extract left and right channel samples from buffer
-void extractSamples(uint8_t* buffer, int32_t& leftSample, int32_t& rightSample) {
-    // PCM1808 outputs 24-bit samples in 32-bit frames
-    // Format: [L3 L2 L1 L0] [R3 R2 R1 R0]
-    leftSample  = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
-    rightSample = (buffer[4] << 24) | (buffer[5] << 16) | (buffer[6] << 8) | buffer[7];
-}
+// Extract a single sample from buffer using helper method
+int32_t sample = PCM1808::extractSample(buffer, 0);  // First sample
+int32_t sample2 = PCM1808::extractSample(buffer, 4); // Second sample
+
+// Extract left and right channel samples from stereo buffer
+int32_t leftSample, rightSample;
+PCM1808::extractStereoSamples(buffer, leftSample, rightSample);
+
+// Manual extraction (if needed)
+// PCM1808 outputs 24-bit samples in 32-bit frames
+// Format: [L3 L2 L1 L0] [R3 R2 R1 R0]
+int32_t manualSample = (buffer[0] << 24) | (buffer[1] << 16) | 
+                       (buffer[2] << 8) | buffer[3];
 ```
 
 ## Advanced Usage
@@ -98,8 +104,8 @@ You can modify the I2S configuration by editing `lib/I2SConfig/I2SConfig.h`:
 // Change sample rate
 #define SAMPLE_RATE         44100  // or 96000, etc.
 
-// Change buffer size
-#define AUDIO_BUFF_SIZE     2048
+// Change buffer size (default is 8192)
+#define AUDIO_BUFF_SIZE     4096
 
 // Change pin assignments (ESP32-S2)
 #define I2S_MCLK_PIN        GPIO_NUM_7

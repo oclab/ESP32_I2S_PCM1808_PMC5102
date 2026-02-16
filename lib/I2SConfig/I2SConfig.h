@@ -19,6 +19,6 @@
 
 // Audio Configuration
 #define SAMPLE_RATE         48000           // Sample rate in Hz
-#define AUDIO_BUFF_SIZE     4096*2          // Audio buffer size
+#define AUDIO_BUFF_SIZE     8192            // Audio buffer size (4096 * 2)
 
 #endif // I2S_CONFIG_H

@@ -109,3 +109,17 @@ size_t PCM1808::read(uint8_t* buffer, size_t bufferSize, uint32_t timeout_ms) {
     
     return bytes_read;
 }
+
+int32_t PCM1808::extractSample(const uint8_t* buffer, size_t offset) {
+    // PCM1808 outputs 24-bit samples in 32-bit frames
+    // Combine 4 bytes into a 32-bit signed integer
+    return (buffer[offset] << 24) | (buffer[offset + 1] << 16) | 
+           (buffer[offset + 2] << 8) | buffer[offset + 3];
+}
+
+void PCM1808::extractStereoSamples(const uint8_t* buffer, int32_t& left, int32_t& right) {
+    // Extract left channel (first 4 bytes)
+    left = extractSample(buffer, 0);
+    // Extract right channel (next 4 bytes)
+    right = extractSample(buffer, 4);
+}
