@@ -46,6 +46,10 @@ PCM1808 adc;
 
 void audioProcessingTask(void* parameter) {
     uint8_t* buffer = (uint8_t*)malloc(AUDIO_BUFF_SIZE);
+    if (!buffer) {
+        Serial.println("Failed to allocate buffer!");
+        vTaskDelete(NULL);
+    }
     
     while (1) {
         size_t bytes_read = adc.read(buffer, AUDIO_BUFF_SIZE);
