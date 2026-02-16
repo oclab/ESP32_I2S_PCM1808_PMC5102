@@ -111,10 +111,15 @@ size_t PCM1808::read(uint8_t* buffer, size_t bufferSize, uint32_t timeout_ms) {
 }
 
 int32_t PCM1808::extractSample(const uint8_t* buffer, size_t offset) {
-    // PCM1808 outputs 24-bit samples in 32-bit frames
+    // PCM1808 outputs 24-bit samples in 32-bit frames (left-aligned)
     // Combine 4 bytes into a 32-bit signed integer
-    return (buffer[offset] << 24) | (buffer[offset + 1] << 16) | 
-           (buffer[offset + 2] << 8) | buffer[offset + 3];
+    // The 24-bit value is in the upper 3 bytes, lower byte is padding
+    int32_t sample = (buffer[offset] << 24) | (buffer[offset + 1] << 16) | 
+                     (buffer[offset + 2] << 8) | buffer[offset + 3];
+    
+    // The sample is already properly sign-extended since we're using
+    // the MSB (buffer[offset]) in the highest position of a signed int32_t
+    return sample;
 }
 
 void PCM1808::extractStereoSamples(const uint8_t* buffer, int32_t& left, int32_t& right) {

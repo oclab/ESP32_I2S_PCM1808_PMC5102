@@ -50,7 +50,6 @@ static void pcm1808_read_task(void* args)
   if (!buffer) {
     Serial.println("Failed to allocate audio buffer!");
     vTaskDelete(NULL);
-    return;
   }
 
   Serial.println("PCM1808 read task started");
